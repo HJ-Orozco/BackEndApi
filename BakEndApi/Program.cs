@@ -1,6 +1,9 @@
 using BakEndApi.Models;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+
+using BakEndApi.Services.Contrato;
+using BakEndApi.Services.Implementacion;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,9 @@ builder.Services.AddDbContext<DbempleadoContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSql"));
 });
+
+builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 
 var app = builder.Build();
 
