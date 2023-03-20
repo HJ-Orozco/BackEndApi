@@ -1,6 +1,6 @@
 ﻿namespace BakEndApi.DTOs
 {
-    public class EmplendoDTO
+    public class EmpleadoDTO
     {
         public int IdEmpleado { get; set; }
 

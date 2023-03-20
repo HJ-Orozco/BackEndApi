@@ -16,18 +16,18 @@ namespace BakEndApi.Utilidades
             #region Empleado
             /*
              origen = Emplado
-             destino = EmplendoDTO
+             destino = EmpleadoDTO
              */
-            CreateMap<Empleado, EmplendoDTO>().
+            CreateMap<Empleado, EmpleadoDTO>().
                 ForMember(destino => 
                 destino.NombreDepartamento, opt => opt.MapFrom(origen => origen.IdDepartamentoNavigation.Nombre)).
                 ForMember(destino =>
                 destino.FechaContrato, opt => opt.MapFrom(origen => origen.FechaContrato.Value.ToString("dd/MM/yyyy")));
             /*
-             origen = EmplendoDTO
+             origen = EmpleadoDTO
              destino = Emplendo
              */
-            CreateMap<EmplendoDTO, Empleado>().
+            CreateMap<EmpleadoDTO, Empleado>().
                 ForMember(destino => destino.IdDepartamentoNavigation, opt =>opt.Ignore()).
                 ForMember(destino => destino.FechaContrato,
                 opt => opt.MapFrom(orige => DateTime.ParseExact(orige.FechaContrato,"dd/MM/yyyy",CultureInfo.InvariantCulture)));
