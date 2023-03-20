@@ -8,6 +8,7 @@ using AutoMapper;
 using BakEndApi.DTOs;
 using BakEndApi.Utilidades;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,16 @@ builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NuevaPolitica", app =>
+    {
+        app.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod(); 
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +47,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 
 #region PETICIONES API REST
@@ -133,5 +145,7 @@ app.MapDelete("/empleado/eliminar/{idEmpleado}", async (
             return Results.StatusCode(StatusCodes.Status500InternalServerError);
     });
 #endregion
+
+app.UseCors("NuevaPolitica");
 app.Run();
 
