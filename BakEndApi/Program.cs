@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using BakEndApi.Services.Contrato;
 using BakEndApi.Services.Implementacion;
 
+using AutoMapper;
+using BakEndApi.DTOs;
+using BakEndApi.Utilidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,7 @@ builder.Services.AddDbContext<DbempleadoContext>(options =>
 
 builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var app = builder.Build();
 
