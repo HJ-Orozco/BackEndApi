@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 using BakEndApi.Services.Contrato;
 using BakEndApi.Services.Implementacion;
+using BakEndApi.Services.EdnPoints;
 
 using AutoMapper;
 using BakEndApi.DTOs;
@@ -41,6 +42,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -48,103 +51,104 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapEndPointsDepartamentos();
+app.MapEndPointsEmpleados();
+
+//#region PETICIONES API REST
+//app.MapGet("/departamento/lista", async (
+//    IDepartamentoService _departamentoService,
+//    IMapper _mapper
+//    ) =>
+//{
+//    var listaDepartamento = await _departamentoService.GetList();
+//    var listaDepartamentoDTO = _mapper.Map<List<DepartamentoDTO>>(listaDepartamento);
+
+//    if (listaDepartamentoDTO.Count > 0)
+//    {
+//        return Results.Ok(listaDepartamentoDTO);
+//    }
+//    else
+//    {
+//        return Results.NotFound();
+//    }
+//});
+
+//app.MapGet("/empleado/lista", async (
+//    IEmpleadoService _empleadoService,
+//    IMapper _mapper
+//    ) =>
+//{
+//    var listaEmpleado = await _empleadoService.GetList();
+//    var listaEmpleadoDTO = _mapper.Map<List<EmpleadoDTO>>(listaEmpleado);
+
+//    if (listaEmpleadoDTO.Count > 0)
+//    {
+//        return Results.Ok(listaEmpleadoDTO);
+//    }
+//    else
+//    {
+//        return Results.NotFound();
+//    }
+//});
+
+//app.MapPost("/empleado/guardar", async (
+//    EmpleadoDTO modelo,
+//    IEmpleadoService _empleadoService,
+//    IMapper _mapper
+//    ) => {
+
+//        var _empleado = _mapper.Map<Empleado>(modelo);
+//        var _empleadoCreado = await _empleadoService.Add(_empleado);
+
+//        if(_empleado.IdEmpleado != 0)
+//            return Results.Ok(_mapper.Map<EmpleadoDTO>(_empleadoCreado));
+//        else
+//            return Results.StatusCode(StatusCodes.Status500InternalServerError);
+
+//});
 
 
-#region PETICIONES API REST
-app.MapGet("/departamento/lista",async(
-    IDepartamentoService _departamentoService,
-    IMapper _mapper
-    ) =>
-{
-    var listaDepartamento = await _departamentoService.GetList();
-    var listaDepartamentoDTO = _mapper.Map<List<DepartamentoDTO>>(listaDepartamento);
 
-    if (listaDepartamentoDTO.Count > 0)
-    {
-        return Results.Ok(listaDepartamentoDTO);
-    }
-    else
-    {
-        return Results.NotFound();
-    }
-});
+//app.MapPut("/empleado/actualizar/{idEmpleado}", async(
+//    int idEmpleado,
+//    EmpleadoDTO modelo,
+//    IEmpleadoService _empleadoService,
+//    IMapper _mapper) => {
 
-app.MapGet("/empleado/lista", async (
-    IEmpleadoService _empleadoService,
-    IMapper _mapper
-    ) =>
-{
-    var listaEmpleado = await _empleadoService.GetList();
-    var listaEmpleadoDTO = _mapper.Map<List<EmpleadoDTO>>(listaEmpleado);
+//        var _encontrado = await _empleadoService.Get(idEmpleado);
+//        if (_empleadoService is null ) return Results.NotFound(idEmpleado);
 
-    if (listaEmpleadoDTO.Count > 0)
-    {
-        return Results.Ok(listaEmpleadoDTO);
-    }
-    else
-    {
-        return Results.NotFound();
-    }
-});
+//        var _empleado = _mapper.Map<Empleado>(modelo);
+//        _encontrado.NombreCompleto = _empleado.NombreCompleto;
+//        _encontrado.IdDepartamento = _empleado.IdDepartamento;
+//        _encontrado.Sueldo= _empleado.Sueldo;
+//        _encontrado.FechaContrato = _empleado.FechaContrato;
 
-app.MapPost("/empleado/guardar", async (
-    EmpleadoDTO modelo,
-    IEmpleadoService _empleadoService,
-    IMapper _mapper
-    ) => {
+//        var respuesta = await _empleadoService.Update(_encontrado);
 
-        var _empleado = _mapper.Map<Empleado>(modelo);
-        var _empleadoCreado = await _empleadoService.Add(_empleado);
+//        if (respuesta)
+//            return Results.Ok(_mapper.Map<EmpleadoDTO>(_encontrado));
+//        else
+//            return Results.StatusCode(StatusCodes.Status500InternalServerError);
 
-        if(_empleado.IdEmpleado != 0)
-            return Results.Ok(_mapper.Map<EmpleadoDTO>(_empleadoCreado));
-        else
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-        
-});
+//    });
 
 
+//app.MapDelete("/empleado/eliminar/{idEmpleado}", async (
+//    int idEmpleado,
+//    IEmpleadoService _empleadoService) => {
 
-app.MapPut("/empleado/actualizar/{idEmpleado}", async(
-    int idEmpleado,
-    EmpleadoDTO modelo,
-    IEmpleadoService _empleadoService,
-    IMapper _mapper) => {
+//        var _encontrado = await _empleadoService.Get(idEmpleado);
+//        if (_empleadoService is null) return Results.NotFound(idEmpleado);
 
-        var _encontrado = await _empleadoService.Get(idEmpleado);
-        if (_empleadoService is null ) return Results.NotFound(idEmpleado);
+//        var respuesta = await _empleadoService.Delete(_encontrado);
 
-        var _empleado = _mapper.Map<Empleado>(modelo);
-        _encontrado.NombreCompleto = _empleado.NombreCompleto;
-        _encontrado.IdDepartamento = _empleado.IdDepartamento;
-        _encontrado.Sueldo= _empleado.Sueldo;
-        _encontrado.FechaContrato = _empleado.FechaContrato;
-
-        var respuesta = await _empleadoService.Update(_encontrado);
-
-        if (respuesta)
-            return Results.Ok(_mapper.Map<EmpleadoDTO>(_encontrado));
-        else
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-
-    });
-
-
-app.MapDelete("/empleado/eliminar/{idEmpleado}", async (
-    int idEmpleado,
-    IEmpleadoService _empleadoService) => {
-
-        var _encontrado = await _empleadoService.Get(idEmpleado);
-        if (_empleadoService is null) return Results.NotFound(idEmpleado);
-
-        var respuesta = await _empleadoService.Delete(_encontrado);
-
-        if (respuesta)
-            return Results.Ok();
-        else
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-    });
-#endregion
+//        if (respuesta)
+//            return Results.Ok();
+//        else
+//            return Results.StatusCode(StatusCodes.Status500InternalServerError);
+//    });
+//#endregion
 
 app.UseCors("NuevaPolitica");
 app.Run();
